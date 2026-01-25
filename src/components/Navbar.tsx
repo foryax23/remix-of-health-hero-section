@@ -63,6 +63,30 @@ const Navbar = () => {
         </a>
       </div>
 
+      {/* Desktop Auth Buttons - Right Side */}
+      <div
+        className="hidden md:flex items-center justify-center gap-0 p-1 rounded-full border-2 absolute right-5 md:right-10"
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(20px)",
+          borderColor: "rgba(255, 255, 255, 0.1)",
+        }}
+      >
+        <Link
+          to="/login"
+          className="px-5 py-3 rounded-full text-foreground hover:bg-white/10 transition-colors"
+        >
+          Log in
+        </Link>
+        <Link
+          to="/signup"
+          className="px-5 py-3 rounded-full text-foreground transition-colors"
+          style={{ backgroundColor: "rgba(34, 35, 38, 0.1)" }}
+        >
+          Sign Up
+        </Link>
+      </div>
+
       {/* Mobile Menu Overlay */}
       {isOpen && (
         <div
@@ -72,6 +96,21 @@ const Navbar = () => {
             backdropFilter: "blur(20px)",
           }}
         >
+          <Link
+            to="/login"
+            onClick={() => setIsOpen(false)}
+            className="w-[90%] text-center px-5 py-4 rounded-full text-foreground hover:bg-white/10 transition-colors border border-white/10"
+          >
+            Log in
+          </Link>
+          <Link
+            to="/signup"
+            onClick={() => setIsOpen(false)}
+            className="w-[90%] text-center px-5 py-4 rounded-full text-foreground transition-colors bg-white/10"
+          >
+            Sign Up
+          </Link>
+          <div className="w-[90%] h-px bg-white/10 my-2" />
           <Link
             to="/about"
             onClick={() => setIsOpen(false)}
