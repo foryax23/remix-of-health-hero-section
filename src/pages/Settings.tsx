@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -111,71 +110,75 @@ export default function Settings() {
 
   return (
     <AppLayout>
-      <div className="space-y-6 max-w-2xl">
-        {/* Profile Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      <div className="space-y-8 max-w-lg mx-auto">
+        {/* Profile Section */}
+        <section className="space-y-6">
+          <h2 className="text-xl font-semibold">Profile</h2>
+          
+          <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Display Name</Label>
+              <Label className="text-muted-foreground text-sm">Display Name</Label>
               <Input
                 value={profile.display_name || ""}
                 onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
+                className="bg-secondary/50 border-0 rounded-xl h-12"
               />
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+
+            <div className="grid gap-4 grid-cols-2">
               <div className="space-y-2">
-                <Label>Height (cm)</Label>
+                <Label className="text-muted-foreground text-sm">Height (cm)</Label>
                 <Input
                   type="number"
                   value={profile.height_cm || ""}
                   onChange={(e) => setProfile({ ...profile, height_cm: Number(e.target.value) || null })}
+                  className="bg-secondary/50 border-0 rounded-xl h-12"
                 />
               </div>
               <div className="space-y-2">
-                <Label>Weight (kg)</Label>
+                <Label className="text-muted-foreground text-sm">Weight (kg)</Label>
                 <Input
                   type="number"
                   value={profile.weight_kg || ""}
                   onChange={(e) => setProfile({ ...profile, weight_kg: Number(e.target.value) || null })}
+                  className="bg-secondary/50 border-0 rounded-xl h-12"
                 />
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Gender</Label>
-                <Select value={profile.gender || ""} onValueChange={(v) => setProfile({ ...profile, gender: v })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Activity Level</Label>
-                <Select value={profile.activity_level || ""} onValueChange={(v) => setProfile({ ...profile, activity_level: v })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select activity level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="sedentary">Sedentary</SelectItem>
-                    <SelectItem value="light">Lightly Active</SelectItem>
-                    <SelectItem value="moderate">Moderately Active</SelectItem>
-                    <SelectItem value="active">Very Active</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+
             <div className="space-y-2">
-              <Label>Fitness Goal</Label>
+              <Label className="text-muted-foreground text-sm">Gender</Label>
+              <Select value={profile.gender || ""} onValueChange={(v) => setProfile({ ...profile, gender: v })}>
+                <SelectTrigger className="bg-secondary/50 border-0 rounded-xl h-12">
+                  <SelectValue placeholder="Select gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="male">Male</SelectItem>
+                  <SelectItem value="female">Female</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-muted-foreground text-sm">Activity Level</Label>
+              <Select value={profile.activity_level || ""} onValueChange={(v) => setProfile({ ...profile, activity_level: v })}>
+                <SelectTrigger className="bg-secondary/50 border-0 rounded-xl h-12">
+                  <SelectValue placeholder="Select activity level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sedentary">Sedentary</SelectItem>
+                  <SelectItem value="light">Lightly Active</SelectItem>
+                  <SelectItem value="moderate">Moderately Active</SelectItem>
+                  <SelectItem value="active">Very Active</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-muted-foreground text-sm">Fitness Goal</Label>
               <Select value={profile.fitness_goal || ""} onValueChange={(v) => setProfile({ ...profile, fitness_goal: v })}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-secondary/50 border-0 rounded-xl h-12">
                   <SelectValue placeholder="Select goal" />
                 </SelectTrigger>
                 <SelectContent>
@@ -186,59 +189,68 @@ export default function Settings() {
                 </SelectContent>
               </Select>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </section>
 
-        {/* Nutrition Targets */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Daily Nutrition Targets</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Calories</Label>
-                <Input
-                  type="number"
-                  value={targets.calories_target}
-                  onChange={(e) => setTargets({ ...targets, calories_target: Number(e.target.value) })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Protein (g)</Label>
-                <Input
-                  type="number"
-                  value={targets.protein_target}
-                  onChange={(e) => setTargets({ ...targets, protein_target: Number(e.target.value) })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Carbs (g)</Label>
-                <Input
-                  type="number"
-                  value={targets.carbs_target}
-                  onChange={(e) => setTargets({ ...targets, carbs_target: Number(e.target.value) })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Fat (g)</Label>
-                <Input
-                  type="number"
-                  value={targets.fat_target}
-                  onChange={(e) => setTargets({ ...targets, fat_target: Number(e.target.value) })}
-                />
-              </div>
+        {/* Nutrition Targets Section */}
+        <section className="space-y-6">
+          <h2 className="text-xl font-semibold">Daily Nutrition Targets</h2>
+          
+          <div className="grid gap-4 grid-cols-2">
+            <div className="space-y-2">
+              <Label className="text-muted-foreground text-sm">Calories</Label>
+              <Input
+                type="number"
+                value={targets.calories_target}
+                onChange={(e) => setTargets({ ...targets, calories_target: Number(e.target.value) })}
+                className="bg-secondary/50 border-0 rounded-xl h-12"
+              />
             </div>
-          </CardContent>
-        </Card>
+            <div className="space-y-2">
+              <Label className="text-muted-foreground text-sm">Protein (g)</Label>
+              <Input
+                type="number"
+                value={targets.protein_target}
+                onChange={(e) => setTargets({ ...targets, protein_target: Number(e.target.value) })}
+                className="bg-secondary/50 border-0 rounded-xl h-12"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-muted-foreground text-sm">Carbs (g)</Label>
+              <Input
+                type="number"
+                value={targets.carbs_target}
+                onChange={(e) => setTargets({ ...targets, carbs_target: Number(e.target.value) })}
+                className="bg-secondary/50 border-0 rounded-xl h-12"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-muted-foreground text-sm">Fat (g)</Label>
+              <Input
+                type="number"
+                value={targets.fat_target}
+                onChange={(e) => setTargets({ ...targets, fat_target: Number(e.target.value) })}
+                className="bg-secondary/50 border-0 rounded-xl h-12"
+              />
+            </div>
+          </div>
+        </section>
 
-        {/* Actions */}
-        <div className="flex gap-4">
-          <Button onClick={handleSave} disabled={saving}>
+        {/* Action Buttons */}
+        <div className="flex gap-4 pt-4">
+          <Button 
+            onClick={handleSave} 
+            disabled={saving}
+            className="flex-1 h-12 rounded-xl bg-[hsl(var(--accent-cyan))] hover:bg-[hsl(var(--accent-cyan))]/90 text-background font-medium"
+          >
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
             Save Changes
           </Button>
-          <Button variant="outline" onClick={handleSignOut}>
+          <Button 
+            variant="outline" 
+            onClick={handleSignOut}
+            className="h-12 rounded-xl border-border/50 hover:bg-secondary/50"
+          >
             Sign Out
           </Button>
         </div>

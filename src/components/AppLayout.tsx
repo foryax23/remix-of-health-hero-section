@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BottomNav } from "@/components/BottomNav";
+import { DynamicBackground } from "@/components/DynamicBackground";
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -44,6 +45,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-background">
+      <DynamicBackground />
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-border">
         <div className="flex h-full flex-col">

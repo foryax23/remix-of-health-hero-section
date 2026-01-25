@@ -14,8 +14,17 @@ export function BottomNav() {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/80 backdrop-blur-xl lg:hidden">
-      <div className="flex items-center justify-around py-2">
+    <div className="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4 lg:hidden">
+      <nav 
+        className="flex items-center gap-1 rounded-full px-2 py-2"
+        style={{
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        }}
+      >
         {NAV_ITEMS.map((item) => {
           const isActive = location.pathname === item.href;
           return (
@@ -23,21 +32,18 @@ export function BottomNav() {
               key={item.href}
               to={item.href}
               className={cn(
-                "flex flex-col items-center gap-1 px-3 py-2 text-xs transition-colors",
+                "relative flex flex-col items-center justify-center rounded-full px-4 py-2 text-xs transition-all duration-200",
                 isActive
-                  ? "text-[hsl(var(--accent-cyan))]"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-white/10 text-[hsl(var(--accent-cyan))]"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
               )}
             >
               <item.icon className={cn("h-5 w-5", isActive && "stroke-[2.5]")} />
-              <span className="font-medium">{item.label}</span>
-              {isActive && (
-                <div className="absolute bottom-1 h-1 w-1 rounded-full bg-[hsl(var(--accent-cyan))]" />
-              )}
+              <span className="mt-1 font-medium">{item.label}</span>
             </Link>
           );
         })}
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
