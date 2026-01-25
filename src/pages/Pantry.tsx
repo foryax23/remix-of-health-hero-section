@@ -91,7 +91,7 @@ export default function Pantry() {
   }, {} as Record<string, PantryItem[]>);
 
   return (
-    <AppLayout title="My Pantry" description="Track what ingredients you have at home">
+    <AppLayout>
       {/* Add Item */}
       <Card className="mb-6">
         <CardHeader>

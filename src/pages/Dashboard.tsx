@@ -1,202 +1,151 @@
 import { useEffect, useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { CircularProgress } from "@/components/CircularProgress";
+import { ScheduleItem } from "@/components/ScheduleItem";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Flame, Drumstick, Wheat, Droplets, Calendar, Dumbbell } from "lucide-react";
-import { format } from "date-fns";
-
-interface NutritionTargets {
-  calories_target: number;
-  protein_target: number;
-  carbs_target: number;
-  fat_target: number;
-}
+import { Edit2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Profile {
   display_name: string | null;
+  avatar_url: string | null;
+}
+
+interface ScheduleTask {
+  id: string;
+  time: string;
+  title: string;
+  category: string;
+  categoryColor: "cyan" | "green" | "purple" | "orange";
+  completed: boolean;
 }
 
 export default function Dashboard() {
   const { user } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [targets, setTargets] = useState<NutritionTargets | null>(null);
-  const [todayMeals, setTodayMeals] = useState<number>(0);
-  const [todayWorkout, setTodayWorkout] = useState<boolean>(false);
+  const [readinessScore, setReadinessScore] = useState(75);
+  const [schedule, setSchedule] = useState<ScheduleTask[]>([
+    {
+      id: "1",
+      time: "07:00 - 08:00",
+      title: "Morning Light Exposure",
+      category: "recovery",
+      categoryColor: "cyan",
+      completed: false,
+    },
+    {
+      id: "2",
+      time: "08:30 - 09:30",
+      title: "Deep Work Session",
+      category: "focus",
+      categoryColor: "purple",
+      completed: false,
+    },
+    {
+      id: "3",
+      time: "12:00 - 12:45",
+      title: "Recovery Walk",
+      category: "workout",
+      categoryColor: "green",
+      completed: false,
+    },
+    {
+      id: "4",
+      time: "13:00 - 13:30",
+      title: "Lunch: Grilled Chicken Salad",
+      category: "meal",
+      categoryColor: "orange",
+      completed: false,
+    },
+  ]);
 
   useEffect(() => {
     if (user) {
-      fetchData();
+      fetchProfile();
     }
   }, [user]);
 
-  async function fetchData() {
-    const today = format(new Date(), "yyyy-MM-dd");
-
-    // Fetch profile
+  async function fetchProfile() {
     const { data: profileData } = await supabase
       .from("profiles")
-      .select("display_name")
+      .select("display_name, avatar_url")
       .eq("user_id", user!.id)
       .maybeSingle();
     setProfile(profileData);
-
-    // Fetch nutrition targets
-    const { data: targetsData } = await supabase
-      .from("nutrition_targets")
-      .select("*")
-      .eq("user_id", user!.id)
-      .maybeSingle();
-    setTargets(targetsData);
-
-    // Fetch today's meal plan items count
-    const { data: mealPlan } = await supabase
-      .from("meal_plans")
-      .select("id")
-      .eq("user_id", user!.id)
-      .eq("plan_date", today)
-      .maybeSingle();
-
-    if (mealPlan) {
-      const { count } = await supabase
-        .from("meal_plan_items")
-        .select("*", { count: "exact", head: true })
-        .eq("meal_plan_id", mealPlan.id)
-        .eq("is_completed", true);
-      setTodayMeals(count || 0);
-    }
-
-    // Check for today's workout
-    const { data: workoutLog } = await supabase
-      .from("workout_logs")
-      .select("is_completed")
-      .eq("user_id", user!.id)
-      .eq("plan_date", today)
-      .eq("is_completed", true)
-      .maybeSingle();
-    setTodayWorkout(!!workoutLog);
   }
 
-  // Mock consumed values for demo
-  const consumed = {
-    calories: 1450,
-    protein: 95,
-    carbs: 120,
-    fat: 45,
+  const toggleTask = (taskId: string) => {
+    setSchedule((prev) =>
+      prev.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
-  const getProgress = (consumed: number, target: number) =>
-    Math.min(Math.round((consumed / target) * 100), 100);
+  const getReadinessMessage = (score: number) => {
+    if (score >= 80) return { title: "High Readiness", message: "Your recovery is excellent. Great day for high-intensity activities!" };
+    if (score >= 60) return { title: "Good Readiness", message: "You're well recovered. A solid workout session is recommended." };
+    if (score >= 40) return { title: "Moderate Readiness", message: "Consider a lighter workout or active recovery today." };
+    return { title: "Low Readiness", message: "Focus on rest and recovery. Light stretching recommended." };
+  };
+
+  const readinessInfo = getReadinessMessage(readinessScore);
 
   return (
-    <AppLayout title="Dashboard" description={`Welcome back${profile?.display_name ? `, ${profile.display_name}` : ""}!`}>
-      <div className="space-y-6">
-        {/* Quick Stats */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Calories
-              </CardTitle>
-              <Flame className="h-4 w-4 text-orange-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {consumed.calories} <span className="text-sm font-normal text-muted-foreground">/ {targets?.calories_target || 2000}</span>
-              </div>
-              <Progress
-                value={getProgress(consumed.calories, targets?.calories_target || 2000)}
-                className="mt-2 h-2"
-              />
-            </CardContent>
-          </Card>
+    <AppLayout>
+      <div className="mx-auto max-w-lg space-y-8">
+        {/* Header */}
+        <DashboardHeader
+          displayName={profile?.display_name}
+          avatarUrl={profile?.avatar_url}
+        />
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Protein
-              </CardTitle>
-              <Drumstick className="h-4 w-4 text-red-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {consumed.protein}g <span className="text-sm font-normal text-muted-foreground">/ {targets?.protein_target || 150}g</span>
-              </div>
-              <Progress
-                value={getProgress(consumed.protein, targets?.protein_target || 150)}
-                className="mt-2 h-2"
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Carbs
-              </CardTitle>
-              <Wheat className="h-4 w-4 text-amber-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {consumed.carbs}g <span className="text-sm font-normal text-muted-foreground">/ {targets?.carbs_target || 200}g</span>
-              </div>
-              <Progress
-                value={getProgress(consumed.carbs, targets?.carbs_target || 200)}
-                className="mt-2 h-2"
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Fat
-              </CardTitle>
-              <Droplets className="h-4 w-4 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {consumed.fat}g <span className="text-sm font-normal text-muted-foreground">/ {targets?.fat_target || 65}g</span>
-              </div>
-              <Progress
-                value={getProgress(consumed.fat, targets?.fat_target || 65)}
-                className="mt-2 h-2"
-              />
-            </CardContent>
-          </Card>
+        {/* Readiness Score */}
+        <div className="flex flex-col items-center space-y-4 py-6">
+          <CircularProgress
+            value={readinessScore}
+            max={100}
+            size={200}
+            strokeWidth={14}
+            sublabel="CHRG+"
+          />
+          <div className="text-center space-y-1">
+            <h2 className="text-xl font-semibold">{readinessInfo.title}</h2>
+            <p className="text-sm text-muted-foreground max-w-xs">
+              {readinessInfo.message}
+            </p>
+          </div>
         </div>
 
-        {/* Today's Overview */}
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Today's Meals
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{todayMeals}</p>
-              <p className="text-sm text-muted-foreground">meals completed today</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Dumbbell className="h-5 w-5" />
-                Today's Workout
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{todayWorkout ? "✅ Done" : "⏳ Pending"}</p>
-              <p className="text-sm text-muted-foreground">
-                {todayWorkout ? "Great job!" : "Don't forget to exercise!"}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Today's Schedule */}
+        <Card className="border-0 bg-transparent shadow-none">
+          <CardHeader className="flex flex-row items-center justify-between px-0 pb-4">
+            <CardTitle className="text-lg">Today's Schedule</CardTitle>
+            <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
+              <Link to="/planner">
+                <Edit2 className="mr-1 h-4 w-4" />
+                Edit
+              </Link>
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-3 px-0">
+            {schedule.map((task) => (
+              <ScheduleItem
+                key={task.id}
+                time={task.time}
+                title={task.title}
+                category={task.category}
+                categoryColor={task.categoryColor}
+                completed={task.completed}
+                onToggle={() => toggleTask(task.id)}
+              />
+            ))}
+          </CardContent>
+        </Card>
       </div>
     </AppLayout>
   );

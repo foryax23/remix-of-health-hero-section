@@ -49,7 +49,7 @@ export default function Workouts() {
   const difficulties = ["beginner", "intermediate", "advanced"];
 
   return (
-    <AppLayout title="Workouts" description="Find workout programs to reach your fitness goals">
+    <AppLayout>
       <div className="space-y-6">
         {/* Search & Filters */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">

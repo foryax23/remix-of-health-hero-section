@@ -94,7 +94,7 @@ export default function Coach() {
   const clearMessages = () => setMessages([]);
 
   return (
-    <AppLayout title="AI Coach" description="Your personal nutrition assistant">
+    <AppLayout>
       <div className="flex h-[calc(100vh-12rem)] flex-col rounded-xl border bg-card shadow-sm">
         {/* Header */}
         <div className="flex items-center justify-between border-b px-4 py-3">
