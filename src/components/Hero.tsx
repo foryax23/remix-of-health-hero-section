@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import leafLeft from "@/assets/leaf-left.png";
 import leafRight from "@/assets/leaf-right.png";
 import heroVideo from "@/assets/hero-video.mp4";
@@ -90,12 +91,21 @@ const Hero = () => {
               </p>
             </div>
 
-              {/* Download Button */}
-              <div className="flex flex-col items-center justify-center text-xl text-primary-foreground mt-8 md:mt-6">
+              {/* Download Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-xl text-primary-foreground mt-8 md:mt-6">
                 <Button
                   variant="hero"
                   size="lg"
-                  className="gap-1"
+                  asChild
+                >
+                  <Link to="/signup">
+                    Get Started Free
+                  </Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="gap-1 rounded-full border-foreground/30 text-foreground hover:bg-foreground/10"
                   asChild
                 >
                   <a href="#">
