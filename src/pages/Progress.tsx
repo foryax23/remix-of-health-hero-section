@@ -62,7 +62,7 @@ export default function Progress() {
   const completedWorkouts = workoutLogs.filter(log => log.is_completed).length;
 
   return (
-    <AppLayout title="Progress" description="Track your fitness journey">
+    <AppLayout>
       <div className="space-y-6">
         {/* Stats Overview */}
         <div className="grid gap-4 md:grid-cols-3">

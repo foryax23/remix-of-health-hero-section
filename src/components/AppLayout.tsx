@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { BottomNav } from "@/components/BottomNav";
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -13,16 +14,11 @@ import {
   ShoppingBasket,
   Settings,
   LogOut,
-  Menu,
-  X,
 } from "lucide-react";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
   children: ReactNode;
-  title?: string;
-  description?: string;
 }
 
 const NAV_ITEMS = [
@@ -36,11 +32,10 @@ const NAV_ITEMS = [
   { label: "Settings", icon: Settings, href: "/settings" },
 ];
 
-export function AppLayout({ children, title, description }: AppLayoutProps) {
+export function AppLayout({ children }: AppLayoutProps) {
   const { signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -49,38 +44,17 @@ export function AppLayout({ children, title, description }: AppLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 transform bg-sidebar-background border-r border-sidebar-border transition-transform duration-200 lg:relative lg:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-border">
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center justify-between px-4 border-b border-sidebar-border">
+          <div className="flex h-16 items-center px-4 border-b border-border">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent">
-                <Sparkles className="h-4 w-4 text-accent-foreground" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--accent-cyan))]">
+                <Sparkles className="h-4 w-4 text-background" />
               </div>
-              <span className="text-lg font-semibold text-sidebar-foreground">NutriPlan</span>
+              <span className="text-lg font-semibold">NutriPlan</span>
             </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden text-sidebar-foreground"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <X className="h-5 w-5" />
-            </Button>
           </div>
 
           {/* Navigation */}
@@ -92,12 +66,11 @@ export function AppLayout({ children, title, description }: AppLayoutProps) {
                   <Link
                     key={item.href}
                     to={item.href}
-                    onClick={() => setSidebarOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all",
                       isActive
-                        ? "bg-sidebar-accent text-sidebar-primary"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                        ? "bg-[hsl(var(--accent-cyan))]/10 text-[hsl(var(--accent-cyan))]"
+                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                     )}
                   >
                     <item.icon className="h-5 w-5" />
@@ -109,10 +82,10 @@ export function AppLayout({ children, title, description }: AppLayoutProps) {
           </ScrollArea>
 
           {/* Sign Out */}
-          <div className="border-t border-sidebar-border p-4">
+          <div className="border-t border-border p-4">
             <Button
               variant="ghost"
-              className="w-full justify-start gap-3 text-sidebar-foreground hover:bg-sidebar-accent"
+              className="w-full justify-start gap-3 text-muted-foreground hover:bg-secondary hover:text-foreground"
               onClick={handleSignOut}
             >
               <LogOut className="h-5 w-5" />
@@ -123,28 +96,12 @@ export function AppLayout({ children, title, description }: AppLayoutProps) {
       </aside>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col">
-        {/* Top Header */}
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/95 backdrop-blur px-4 lg:px-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <div className="flex-1">
-            {title && <h1 className="text-xl font-semibold">{title}</h1>}
-            {description && (
-              <p className="text-sm text-muted-foreground">{description}</p>
-            )}
-          </div>
-        </header>
-
-        {/* Page Content */}
+      <div className="flex flex-1 flex-col pb-20 lg:pb-0">
         <main className="flex-1 overflow-auto p-4 lg:p-6">{children}</main>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 }

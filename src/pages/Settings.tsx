@@ -101,7 +101,7 @@ export default function Settings() {
 
   if (loading) {
     return (
-      <AppLayout title="Settings">
+      <AppLayout>
         <div className="flex justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
@@ -110,7 +110,7 @@ export default function Settings() {
   }
 
   return (
-    <AppLayout title="Settings" description="Manage your account and preferences">
+    <AppLayout>
       <div className="space-y-6 max-w-2xl">
         {/* Profile Settings */}
         <Card>

@@ -88,7 +88,7 @@ export default function Planner() {
   const nextWeek = () => setWeekStart(addDays(weekStart, 7));
 
   return (
-    <AppLayout title="Planner" description="Plan your meals and workouts for the week">
+    <AppLayout>
       <div className="space-y-6">
         {/* Week Navigation */}
         <div className="flex items-center justify-between">

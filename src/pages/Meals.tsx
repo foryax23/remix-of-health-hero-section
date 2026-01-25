@@ -51,7 +51,7 @@ export default function Meals() {
   const mealTypes = ["breakfast", "lunch", "dinner", "snack"];
 
   return (
-    <AppLayout title="Meals" description="Browse healthy recipes for your meal plans">
+    <AppLayout>
       <div className="space-y-6">
         {/* Search & Filters */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
