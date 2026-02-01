@@ -2,6 +2,16 @@ import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 
+/**
+ * Linear-style Schedule Item
+ *
+ * Design principles:
+ * - Clean card with subtle hover state
+ * - Monospace time for precision feel
+ * - Subtle category badges
+ * - Smooth check animations
+ */
+
 interface ScheduleItemProps {
   time: string;
   title: string;
@@ -13,10 +23,10 @@ interface ScheduleItemProps {
 }
 
 const categoryColors = {
-  cyan: "bg-[hsl(var(--accent-cyan))]/20 text-[hsl(var(--accent-cyan))] border-[hsl(var(--accent-cyan))]/30",
-  green: "bg-accent/20 text-accent border-accent/30",
-  purple: "bg-purple-500/20 text-purple-400 border-purple-500/30",
-  orange: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+  cyan: "bg-sky-500/10 text-sky-600 border-sky-500/20",
+  green: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+  purple: "bg-violet-500/10 text-violet-600 border-violet-500/20",
+  orange: "bg-amber-500/10 text-amber-600 border-amber-500/20",
 };
 
 export function ScheduleItem({
@@ -31,23 +41,33 @@ export function ScheduleItem({
   return (
     <div
       className={cn(
-        "flex items-start gap-4 rounded-xl bg-card/50 p-4 transition-all hover:bg-card",
-        completed && "opacity-60",
+        "group flex items-start gap-3 rounded-lg border border-transparent bg-card p-3.5 shadow-soft-xs transition-all duration-150 hover:border-border hover:shadow-soft-sm",
+        completed && "opacity-50",
         className
       )}
     >
       <Checkbox
         checked={completed}
         onCheckedChange={onToggle}
-        className="mt-1 h-5 w-5 rounded-md border-muted-foreground/50 data-[state=checked]:border-[hsl(var(--accent-cyan))] data-[state=checked]:bg-[hsl(var(--accent-cyan))]"
+        className="mt-0.5 h-4 w-4 rounded border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary"
       />
-      <div className="flex-1 space-y-1">
-        <p className="text-sm text-muted-foreground">{time}</p>
-        <p className={cn("font-medium", completed && "line-through")}>{title}</p>
+      <div className="flex-1 min-w-0 space-y-0.5">
+        <p className="font-mono text-xs text-muted-foreground">{time}</p>
+        <p
+          className={cn(
+            "text-sm font-medium text-foreground transition-all duration-150",
+            completed && "line-through text-muted-foreground"
+          )}
+        >
+          {title}
+        </p>
       </div>
       <Badge
         variant="outline"
-        className={cn("text-xs font-medium", categoryColors[categoryColor])}
+        className={cn(
+          "shrink-0 text-[10px] font-medium uppercase tracking-wider",
+          categoryColors[categoryColor]
+        )}
       >
         {category}
       </Badge>

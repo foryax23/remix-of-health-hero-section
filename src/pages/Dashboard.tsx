@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Edit2 } from "lucide-react";
+import { Edit2, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface Profile {
@@ -87,52 +87,88 @@ export default function Dashboard() {
   };
 
   const getReadinessMessage = (score: number) => {
-    if (score >= 80) return { title: "High Readiness", message: "Your recovery is excellent. Great day for high-intensity activities!" };
-    if (score >= 60) return { title: "Good Readiness", message: "You're well recovered. A solid workout session is recommended." };
-    if (score >= 40) return { title: "Moderate Readiness", message: "Consider a lighter workout or active recovery today." };
-    return { title: "Low Readiness", message: "Focus on rest and recovery. Light stretching recommended." };
+    if (score >= 80)
+      return {
+        title: "High Readiness",
+        message:
+          "Your recovery is excellent. Great day for high-intensity activities.",
+      };
+    if (score >= 60)
+      return {
+        title: "Good Readiness",
+        message: "You're well recovered. A solid workout session is recommended.",
+      };
+    if (score >= 40)
+      return {
+        title: "Moderate Readiness",
+        message: "Consider a lighter workout or active recovery today.",
+      };
+    return {
+      title: "Low Readiness",
+      message: "Focus on rest and recovery. Light stretching recommended.",
+    };
   };
 
   const readinessInfo = getReadinessMessage(readinessScore);
+  const completedCount = schedule.filter((t) => t.completed).length;
 
   return (
     <AppLayout>
-      <div className="mx-auto max-w-lg space-y-8">
+      <div className="space-y-8">
         {/* Header */}
         <DashboardHeader
           displayName={profile?.display_name}
           avatarUrl={profile?.avatar_url}
         />
 
-        {/* Readiness Score */}
-        <div className="flex flex-col items-center space-y-4 py-6">
-          <CircularProgress
-            value={readinessScore}
-            max={100}
-            size={200}
-            strokeWidth={14}
-            sublabel="CHRG+"
-          />
-          <div className="text-center space-y-1">
-            <h2 className="text-xl font-semibold">{readinessInfo.title}</h2>
-            <p className="text-sm text-muted-foreground max-w-xs">
-              {readinessInfo.message}
-            </p>
-          </div>
-        </div>
+        {/* Readiness Score Card */}
+        <Card variant="bordered" className="overflow-hidden">
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center space-y-4">
+              <CircularProgress
+                value={readinessScore}
+                max={100}
+                size={160}
+                strokeWidth={10}
+                sublabel="READINESS"
+              />
+              <div className="text-center space-y-1">
+                <h2 className="text-base font-medium text-foreground">
+                  {readinessInfo.title}
+                </h2>
+                <p className="text-sm text-muted-foreground max-w-xs">
+                  {readinessInfo.message}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Today's Schedule */}
-        <Card className="border-0 bg-transparent shadow-none">
-          <CardHeader className="flex flex-row items-center justify-between px-0 pb-4">
-            <CardTitle className="text-lg">Today's Schedule</CardTitle>
-            <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <h2 className="text-base font-medium text-foreground">
+                Today's Schedule
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                {completedCount} of {schedule.length} completed
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-muted-foreground hover:text-foreground -mr-2"
+            >
               <Link to="/planner">
-                <Edit2 className="mr-1 h-4 w-4" />
                 Edit
+                <ChevronRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
-          </CardHeader>
-          <CardContent className="space-y-3 px-0">
+          </div>
+
+          <div className="space-y-2">
             {schedule.map((task) => (
               <ScheduleItem
                 key={task.id}
@@ -144,8 +180,8 @@ export default function Dashboard() {
                 onToggle={() => toggleTask(task.id)}
               />
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </AppLayout>
   );
