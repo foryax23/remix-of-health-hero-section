@@ -1,10 +1,15 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BottomNav } from "@/components/BottomNav";
-import { DynamicBackground } from "@/components/DynamicBackground";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   LayoutDashboard,
   UtensilsCrossed,
@@ -15,6 +20,8 @@ import {
   ShoppingBasket,
   Settings,
   LogOut,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +44,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { signOut } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -44,66 +52,147 @@ export function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <DynamicBackground />
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-border">
-        <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-16 items-center px-4 border-b border-border">
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--accent-cyan))]">
-                <Sparkles className="h-4 w-4 text-background" />
+    <TooltipProvider delayDuration={0}>
+      <div className="flex min-h-screen bg-background">
+        {/* Desktop Sidebar - Linear Style */}
+        <aside
+          className={cn(
+            "hidden lg:flex lg:flex-col border-r border-border bg-sidebar transition-all duration-300 ease-smooth",
+            isCollapsed ? "lg:w-16" : "lg:w-60"
+          )}
+        >
+          <div className="flex h-full flex-col">
+            {/* Logo & Collapse Toggle */}
+            <div className="flex h-14 items-center justify-between px-3 border-b border-border">
+              <Link
+                to="/dashboard"
+                className={cn(
+                  "flex items-center gap-2.5 transition-all duration-300",
+                  isCollapsed && "justify-center"
+                )}
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                  <Sparkles className="h-4 w-4 text-primary-foreground" />
+                </div>
+                {!isCollapsed && (
+                  <span className="text-sm font-semibold text-foreground">
+                    NutriPlan
+                  </span>
+                )}
+              </Link>
+              {!isCollapsed && (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setIsCollapsed(true)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+
+            {/* Expand button when collapsed */}
+            {isCollapsed && (
+              <div className="flex justify-center py-2 border-b border-border">
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => setIsCollapsed(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
-              <span className="text-lg font-semibold">NutriPlan</span>
-            </Link>
-          </div>
+            )}
 
-          {/* Navigation */}
-          <ScrollArea className="flex-1 px-3 py-4">
-            <nav className="space-y-1">
-              {NAV_ITEMS.map((item) => {
-                const isActive = location.pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    className={cn(
-                      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all",
-                      isActive
-                        ? "bg-[hsl(var(--accent-cyan))]/10 text-[hsl(var(--accent-cyan))]"
-                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </ScrollArea>
+            {/* Navigation */}
+            <ScrollArea className="flex-1 px-2 py-3">
+              <nav className="space-y-0.5">
+                {NAV_ITEMS.map((item) => {
+                  const isActive = location.pathname === item.href;
+                  const NavLink = (
+                    <Link
+                      key={item.href}
+                      to={item.href}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150",
+                        isCollapsed && "justify-center px-2",
+                        isActive
+                          ? "bg-primary/10 text-primary"
+                          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      )}
+                    >
+                      <item.icon
+                        className={cn(
+                          "h-[18px] w-[18px] shrink-0",
+                          isActive && "text-primary"
+                        )}
+                      />
+                      {!isCollapsed && <span>{item.label}</span>}
+                    </Link>
+                  );
 
-          {/* Sign Out */}
-          <div className="border-t border-border p-4">
-            <Button
-              variant="ghost"
-              className="w-full justify-start gap-3 text-muted-foreground hover:bg-secondary hover:text-foreground"
-              onClick={handleSignOut}
-            >
-              <LogOut className="h-5 w-5" />
-              Sign Out
-            </Button>
+                  if (isCollapsed) {
+                    return (
+                      <Tooltip key={item.href}>
+                        <TooltipTrigger asChild>{NavLink}</TooltipTrigger>
+                        <TooltipContent side="right" className="font-medium">
+                          {item.label}
+                        </TooltipContent>
+                      </Tooltip>
+                    );
+                  }
+
+                  return NavLink;
+                })}
+              </nav>
+            </ScrollArea>
+
+            {/* Sign Out */}
+            <div className="border-t border-border p-2">
+              {isCollapsed ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="w-full text-muted-foreground hover:text-foreground"
+                      onClick={handleSignOut}
+                    >
+                      <LogOut className="h-[18px] w-[18px]" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="font-medium">
+                    Sign Out
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start gap-3 text-sm text-muted-foreground hover:text-foreground"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="h-[18px] w-[18px]" />
+                  Sign Out
+                </Button>
+              )}
+            </div>
           </div>
+        </aside>
+
+        {/* Main Content */}
+        <div className="flex flex-1 flex-col pb-24 lg:pb-0">
+          <main className="flex-1 overflow-auto">
+            <div className="mx-auto max-w-5xl px-4 py-6 lg:px-8 lg:py-8">
+              {children}
+            </div>
+          </main>
         </div>
-      </aside>
 
-      {/* Main Content */}
-      <div className="flex flex-1 flex-col pb-20 lg:pb-0">
-        <main className="flex-1 overflow-auto p-4 lg:p-6">{children}</main>
+        {/* Mobile Bottom Navigation */}
+        <BottomNav />
       </div>
-
-      {/* Mobile Bottom Navigation */}
-      <BottomNav />
-    </div>
+    </TooltipProvider>
   );
 }

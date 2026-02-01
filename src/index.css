@@ -2,100 +2,143 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* Bevel Health Design System */
+/* ============================================
+   LINEAR-STYLE DESIGN SYSTEM 2026
+   Premium "Glass & Air" Aesthetic
+   ============================================ */
 
 @layer base {
   :root {
-    --background: 210 15% 8%;
-    --foreground: 0 0% 100%;
+    /* === CORE NEUTRAL PALETTE === */
+    /* Canvas - Subtle off-white to reduce eye strain */
+    --background: 220 14% 98%;
+    /* Primary text - Dark charcoal, not pure black */
+    --foreground: 220 13% 10%;
 
-    --card: 210 12% 12%;
-    --card-foreground: 0 0% 100%;
+    /* Card surfaces - Pure white with subtle depth */
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 10%;
 
-    --popover: 210 12% 12%;
-    --popover-foreground: 0 0% 100%;
+    /* Popover/Dropdown surfaces */
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 10%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 210 15% 8%;
+    /* === PRIMARY ACTION COLOR === */
+    /* Electric Indigo - Premium brand accent */
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 10% 18%;
-    --secondary-foreground: 0 0% 100%;
+    /* === SECONDARY/MUTED TONES === */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 26%;
 
-    --muted: 210 10% 25%;
-    --muted-foreground: 210 10% 70%;
+    /* Muted elements */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 142 60% 50%;
+    /* === ACCENT COLORS === */
+    /* Teal accent for health/wellness context */
+    --accent: 172 66% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --accent-cyan: 185 84% 50%;
+    /* Cyan accent - secondary highlight */
+    --accent-cyan: 189 94% 43%;
     --accent-cyan-foreground: 0 0% 100%;
 
+    /* === SEMANTIC COLORS === */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 10% 20%;
-    --input: 210 10% 20%;
-    --ring: 142 60% 50%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
-    --radius: 9999px;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
 
-    /* Hero specific tokens */
+    /* === UI BOUNDARIES === */
+    /* Ultra-thin, precise borders */
+    --border: 220 13% 91%;
+    --border-subtle: 220 13% 95%;
+    --input: 220 13% 91%;
+    --ring: 239 84% 67%;
+
+    /* === RADIUS SYSTEM === */
+    --radius: 0.5rem;
+    --radius-sm: 0.375rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+
+    /* === HERO SECTION (Landing Page - Dark) === */
     --hero-text: 0 0% 100%;
     --hero-button-bg: 0 0% 100%;
-    --hero-button-text: 210 15% 10%;
+    --hero-button-text: 220 13% 10%;
 
-    --sidebar-background: 210 12% 10%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 142 60% 50%;
+    /* === SIDEBAR NAVIGATION === */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 13% 26%;
+    --sidebar-primary: 239 84% 67%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 10% 18%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 210 10% 20%;
-    --sidebar-ring: 142 60% 50%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 220 13% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 239 84% 67%;
+
+    /* === GLASS MORPHISM === */
+    --glass-bg: 0 0% 100% / 0.8;
+    --glass-border: 220 13% 91% / 0.5;
+    --glass-blur: 12px;
+
+    /* === TYPOGRAPHY SCALE === */
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   }
 
+  /* Dark mode (for landing page sections) */
   .dark {
-    --background: 210 15% 8%;
-    --foreground: 0 0% 100%;
+    --background: 220 13% 5%;
+    --foreground: 220 14% 96%;
 
-    --card: 210 12% 12%;
-    --card-foreground: 0 0% 100%;
+    --card: 220 13% 8%;
+    --card-foreground: 220 14% 96%;
 
-    --popover: 210 12% 12%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 220 13% 8%;
+    --popover-foreground: 220 14% 96%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 210 15% 8%;
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 10% 18%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 13% 12%;
+    --secondary-foreground: 220 14% 90%;
 
-    --muted: 210 10% 25%;
-    --muted-foreground: 210 10% 70%;
+    --muted: 220 13% 15%;
+    --muted-foreground: 220 9% 55%;
 
-    --accent: 142 60% 50%;
+    --accent: 172 66% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --accent-cyan: 185 84% 50%;
+    --accent-cyan: 189 94% 43%;
     --accent-cyan-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 30%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 10% 20%;
-    --input: 210 10% 20%;
-    --ring: 142 60% 50%;
+    --border: 220 13% 15%;
+    --border-subtle: 220 13% 12%;
+    --input: 220 13% 15%;
+    --ring: 239 84% 67%;
 
-    --sidebar-background: 210 12% 10%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 142 60% 50%;
+    --sidebar-background: 220 13% 8%;
+    --sidebar-foreground: 220 14% 90%;
+    --sidebar-primary: 239 84% 67%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 10% 18%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 210 10% 20%;
-    --sidebar-ring: 142 60% 50%;
+    --sidebar-accent: 220 13% 12%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 220 13% 15%;
+    --sidebar-ring: 239 84% 67%;
+
+    --glass-bg: 220 13% 5% / 0.8;
+    --glass-border: 220 13% 20% / 0.5;
   }
 }
 
@@ -105,12 +148,88 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography hierarchy using weight, not size */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium tracking-tight;
+  }
+
+  /* Monospace for data/numbers */
+  .font-mono {
+    font-family: var(--font-mono);
   }
 }
 
-/* Dynamic Background Animations */
+/* === GLASS MORPHISM UTILITIES === */
+@layer utilities {
+  .glass {
+    background: hsl(var(--glass-bg));
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid hsl(var(--glass-border));
+  }
+
+  .glass-subtle {
+    background: hsl(0 0% 100% / 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* === MICRO-INTERACTIONS === */
+@layer utilities {
+  /* Fast, smooth transitions (< 0.2s) */
+  .transition-fast {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Button press effect */
+  .press-effect {
+    @apply transition-fast;
+  }
+  .press-effect:active {
+    transform: scale(0.98);
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-fast;
+  }
+  .hover-lift:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* === SKELETON SHIMMER EFFECT === */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@layer utilities {
+  .animate-shimmer {
+    animation: shimmer 1.5s infinite linear;
+    background: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 0%,
+      hsl(220 14% 92%) 50%,
+      hsl(var(--muted)) 100%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+/* === SUBTLE ANIMATIONS === */
 @keyframes float-slow {
   0%, 100% {
     transform: translate(0, 0) scale(1);
@@ -129,12 +248,46 @@
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @layer utilities {
   .animate-float-slow {
     animation: float-slow 20s ease-in-out infinite;
   }
-  
+
   .animate-float-slower {
     animation: float-slower 25s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+}
+
+/* === FOCUS STATES === */
+@layer utilities {
+  .focus-ring {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+/* === DATA VISUALIZATION === */
+@layer utilities {
+  /* Soft gradient fills for charts */
+  .chart-gradient-primary {
+    fill: url(#gradient-primary);
+  }
+
+  .chart-gradient-accent {
+    fill: url(#gradient-accent);
   }
 }
